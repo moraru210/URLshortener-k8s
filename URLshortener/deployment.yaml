@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment # mentions this is a Deployment
+metadata:
+    name: url-shortener # name of Deployment
+spec:
+    replicas: 2 # creates 2 replicated Pods
+    selector:
+        matchLabels:
+            app: url-shortener # defines how the Deployment finds which Pods to manage
+    template:
+        metadata:
+            labels:
+                app: url-shortener # specifies that the Pods are to be named as go-app
+        spec: # specification for each Pod .This block indicates that the Pods run one container 'go-app-container', which runs the jeshocarmel/ip_location_mapper dockerhub image .
+            containers:
+                - name: url-shortener-container # name of the container running inside the Pod
+                  image: moraru210/url-shortener # image to deployed in the container
+                  imagePullPolicy: Always # pull image from the repository (dockerhub) always
+                  ports:
+                    - containerPort: 9808
+                  env: # list of env variables passed to the app
+                    - name: REDIS_URL # REDIS_URL is the hostname for the redis cluster 
+                      valueFrom:
+                        configMapKeyRef:
+                            name: app-configmap # name of the config-map
+                            key: redis-service # import the value of 'redis-service' from app-configmap
+
+                    - name: REDIS_PASSWORD # REDIS_PASSWORD is used by the app to authenticate with the redis host
+                      valueFrom:
+                        secretKeyRef:
+                            name: app-secret # name of the secret
+                            key: redis-password # import the value of 'redis-password' from app-secret

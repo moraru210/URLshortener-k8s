@@ -1,0 +1,14 @@
+kind: Service # mentions this is a service
+apiVersion: v1
+metadata:
+  name: app-service # name of service
+spec:
+  type: NodePort # service type to be NodePort
+  ports:
+  - name: http
+    port: 80 # serve on port 80
+    targetPort: 9808 # reach to port 8080 of all the Pods in the selector block
+    nodePort: 30000 # use port 30000 as nodePort
+    
+  selector:
+      app: url-shortener # The set of Pods with name 'go-app' is targeted by this Service

@@ -1,0 +1,13 @@
+# downgraded slaveCount from '3' to '2'
+slaveCount: 2
+# change networkPolicy enabled to 'false' from 'true'. This enables the app to discover the cluster easily.
+networkPolicy:
+   enabled: false 
+   allowExternal: true
+# mentioned app-secret to retrieve the redis-password we had initially created in step 2
+# password:
+#     existingSecret: app-secret 
+#     existingSecretPasswordKey: redis-password 
+# changed persistence enabled to false. minikube doesn't support persistence for redis
+persistence:
+    enabled: false
